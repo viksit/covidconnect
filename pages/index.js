@@ -19,7 +19,7 @@ export default function Home() {
         </p>
 
         <h3> Also see </h3>
-        <a href="" className={styles.card}>
+        <a href="https://covidconnect.vercel.app/api/data?city=delhi&resource_type=demand" className={styles.card}>
           <h3>Documentation</h3>
           <p className={styles.code}>
             https://covidconnect.vercel.app/api/data?city=delhi&resource_type=demand<br/>
