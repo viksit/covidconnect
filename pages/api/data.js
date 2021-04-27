@@ -1,8 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { TwitterClient } from 'twitter-api-client';
+import NextCors from 'nextjs-cors';
 
 const needle = require('needle');
-const querystring = require("querystring");
+const querystring = require('querystring');
 
 // const twitterClient = new TwitterClient({
 //   apiKey: process.env.TWITTER_API_KEY,
@@ -12,8 +13,7 @@ const querystring = require("querystring");
 // });
 
 const token = process.env.TWITTER_BEARER_TOKEN;
-const endpointUrl = "https://api.twitter.com/2/tweets/search/recent";
-
+const endpointUrl = 'https://api.twitter.com/2/tweets/search/recent';
 
 const createQuery = (params) => {
   /*
@@ -28,20 +28,22 @@ const createQuery = (params) => {
   if (!resource_type) {
     resource_type = 'demand';
   }
-  
+
   if (resource_type == 'demand') {
-    resource_type_query = '-available -availablity (needed OR need OR needs OR required OR require OR requires OR requirement OR requirements)';
-  }
-  else if (resource_type == 'supply') {
-    resource_type_query = '(available OR availablity) -needed -need -needs -required -require -requires -requirement -requirements';
+    resource_type_query =
+      '-available -availablity (needed OR need OR needs OR required OR require OR requires OR requirement OR requirements)';
+  } else if (resource_type == 'supply') {
+    resource_type_query =
+      '(available OR availablity) -needed -need -needs -required -require -requires -requirement -requirements';
   }
   console.log('resource_type: ', resource_type);
   console.log('resource type query: ', resource_type_query);
-  var material_type = "(bed OR beds OR icu OR oxygen OR ventilator OR ventilators OR oxygen%20cylinder OR oxygen%20cylinders OR #bed OR #BED )";
-  
+  var material_type =
+    '(bed OR beds OR icu OR oxygen OR ventilator OR ventilators OR oxygen%20cylinder OR oxygen%20cylinders OR #bed OR #BED )';
+
   const searchQuery = `verified #verified -not%20verified -unverified #${params.city} ${params.city} ${material_type} -is:retweet ${resource_type_query}`;
   return searchQuery;
-}
+};
 
 // async function getRequestV1(searchQuery) {
 //   // tweets.search(parameters)
@@ -54,64 +56,77 @@ const createQuery = (params) => {
 //   return data;
 // }
 
-
 async function getTwitterSearchRequestV2(searchQuery, params) {
-  const {city, resourceType, max_results} = params;
+  const { city, resourceType, max_results } = params;
 
   const twitterParams = {
-    'query': searchQuery,
+    query: searchQuery,
     'tweet.fields': 'author_id,created_at',
-    'max_results': max_results,
-  }
+    max_results: max_results,
+  };
 
   const res = await needle('get', endpointUrl, twitterParams, {
     headers: {
-      "User-Agent": "v2RecentSearchJS",
-      "authorization": `Bearer ${token}`
-    }
-  })
+      'User-Agent': 'v2RecentSearchJS',
+      authorization: `Bearer ${token}`,
+    },
+  });
   if (res.body) {
     return {
-      'res': res.body,
-      'twitter_params': twitterParams
-    }
+      res: res.body,
+      twitter_params: twitterParams,
+    };
   } else {
     throw new Error('Unsuccessful request');
   }
 }
 
-
 export default async (req, res) => {
+  const whiteList = [
+    'http://localhost:3000',
+    'http://localhost:3005',
+    'https://life.coronasafe.network',
+    'https://liferesources.in',
+    'https://life-hzjblpztg-coronasafe.vercel.app',
+  ];
   // Make request
   console.log('query: ', req.query);
-  var {city, resource_type, max_results} = req.query;
+  var { city, resource_type, max_results } = req.query;
 
   if (!max_results) {
     max_results = 100;
   }
-  
+
   var searchParams = {
     city: city,
     resource_type: resource_type,
-    max_results: max_results
+    max_results: max_results,
   };
 
   var searchQuery = createQuery(searchParams);
   console.log('searchQuery: ', searchQuery);
 
-  var apiResponse = {'status' : 'dummy'};
+  var apiResponse = { status: 'dummy' };
   apiResponse = await getTwitterSearchRequestV2(searchQuery, searchParams);
 
   var response = {
-    "query_params": req.query,
-    "twitter_search_params": apiResponse.twitter_params,
-    "search_query" : searchQuery,
-    "api_response": apiResponse.res
+    query_params: req.query,
+    twitter_search_params: apiResponse.twitter_params,
+    search_query: searchQuery,
+    api_response: apiResponse.res,
   };
 
   // TODO(viksit): add error handling
-  res.status(200).json({
-    response: response,
-    status: 200
-  });
-}
+  const temp = whiteList.indexOf(req.headers.origin);
+  if (temp !== -1) {
+    await NextCors(req, res, {
+      methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+      origin: `${whiteList[temp]}`,
+      optionsSuccessStatus: 200,
+    });
+    res.json({
+      response: response,
+      status: 200,
+    });
+  }
+};
