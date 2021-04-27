@@ -1,7 +1,15 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { TwitterClient } from 'twitter-api-client';
 
 const needle = require('needle');
 const querystring = require("querystring");
+
+const twitterClient = new TwitterClient({
+  apiKey: process.env.TWITTER_API_KEY,
+  apiSecret: process.env.TWITTER_API_SECRET,
+  accessToken: process.env.TWITTER_ACCESS_TOKEN,
+  accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+});
 
 const token = process.env.TWITTER_BEARER_TOKEN;
 const endpointUrl = "https://api.twitter.com/2/tweets/search/recent";
@@ -10,9 +18,9 @@ const endpointUrl = "https://api.twitter.com/2/tweets/search/recent";
 const createQuery = (params) => {
   /*
     params:
-      city: delhi, bangalore, ...
-      resource_type: supply/demand
-   */
+    city: delhi, bangalore, ...
+    resource_type: supply/demand
+  */
 
   var resource_type_query = '';
   var resource_type = params.resource_type;
@@ -35,8 +43,19 @@ const createQuery = (params) => {
   return searchQuery;
 }
 
+async function getRequestV1(searchQuery) {
+  // tweets.search(parameters)
+  const params = {
+    'q': searchQuery,
+    'result_type': 'recent',
+    'count': 50,
+  }
+  const data = await twitterClient.tweets.search(params);
+  return data;
+}
 
-async function getRequest(searchQuery) {
+
+async function getRequestV2(searchQuery) {
   const params = {
     'query': searchQuery,
     'tweet.fields': 'author_id,created_at'
@@ -59,16 +78,20 @@ export default async (req, res) => {
   // Make request
   console.log('query: ', req.query);
   var {city, resource_type} = req.query;
- 
+  
   var searchQuery = createQuery({
     city: city,
-    resource_type: resource_type
+    resourceType: resource_type
   });
   console.log('searchQuery: ', searchQuery);
+  var apiResponse = {'status' : 'dummy'};
+  apiResponse = await getRequestV2(searchQuery);
   var response = {
     "queryParams": req.query,
-    "searchQuery" : searchQuery
+    "searchQuery" : searchQuery,
+    "apiResponse": apiResponse
   };
-  response = await getRequest(searchQuery);
+
+  
   res.status(200).json({ resp: response })
 }
