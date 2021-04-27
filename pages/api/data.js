@@ -55,19 +55,26 @@ const createQuery = (params) => {
 // }
 
 
-async function getRequestV2(searchQuery) {
-  const params = {
+async function getTwitterSearchRequestV2(searchQuery, params) {
+  const {city, resourceType, max_results} = params;
+
+  const twitterParams = {
     'query': searchQuery,
-    'tweet.fields': 'author_id,created_at'
+    'tweet.fields': 'author_id,created_at',
+    'max_results': max_results,
   }
-  const res = await needle('get', endpointUrl, params, {
+
+  const res = await needle('get', endpointUrl, twitterParams, {
     headers: {
       "User-Agent": "v2RecentSearchJS",
       "authorization": `Bearer ${token}`
     }
   })
   if (res.body) {
-    return res.body;
+    return {
+      'res': res.body,
+      'twitter_params': twitterParams
+    }
   } else {
     throw new Error('Unsuccessful request');
   }
@@ -77,21 +84,34 @@ async function getRequestV2(searchQuery) {
 export default async (req, res) => {
   // Make request
   console.log('query: ', req.query);
-  var {city, resource_type} = req.query;
+  var {city, resource_type, max_results} = req.query;
+
+  if (!max_results) {
+    max_results = 100;
+  }
   
-  var searchQuery = createQuery({
+  var searchParams = {
     city: city,
-    resourceType: resource_type
-  });
-  console.log('searchQuery: ', searchQuery);
-  var apiResponse = {'status' : 'dummy'};
-  apiResponse = await getRequestV2(searchQuery);
-  var response = {
-    "queryParams": req.query,
-    "searchQuery" : searchQuery,
-    "apiResponse": apiResponse
+    resource_type: resource_type,
+    max_results: max_results
   };
 
-  
-  res.status(200).json({ resp: response })
+  var searchQuery = createQuery(searchParams);
+  console.log('searchQuery: ', searchQuery);
+
+  var apiResponse = {'status' : 'dummy'};
+  apiResponse = await getTwitterSearchRequestV2(searchQuery, searchParams);
+
+  var response = {
+    "query_params": req.query,
+    "twitter_search_params": apiResponse.twitter_params,
+    "search_query" : searchQuery,
+    "api_response": apiResponse.res
+  };
+
+  // TODO(viksit): add error handling
+  res.status(200).json({
+    response: response,
+    status: 200
+  });
 }
