@@ -4,12 +4,12 @@ import { TwitterClient } from 'twitter-api-client';
 const needle = require('needle');
 const querystring = require("querystring");
 
-const twitterClient = new TwitterClient({
-  apiKey: process.env.TWITTER_API_KEY,
-  apiSecret: process.env.TWITTER_API_SECRET,
-  accessToken: process.env.TWITTER_ACCESS_TOKEN,
-  accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
-});
+// const twitterClient = new TwitterClient({
+//   apiKey: process.env.TWITTER_API_KEY,
+//   apiSecret: process.env.TWITTER_API_SECRET,
+//   accessToken: process.env.TWITTER_ACCESS_TOKEN,
+//   accessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+// });
 
 const token = process.env.TWITTER_BEARER_TOKEN;
 const endpointUrl = "https://api.twitter.com/2/tweets/search/recent";
@@ -43,16 +43,16 @@ const createQuery = (params) => {
   return searchQuery;
 }
 
-async function getRequestV1(searchQuery) {
-  // tweets.search(parameters)
-  const params = {
-    'q': searchQuery,
-    'result_type': 'recent',
-    'count': 50,
-  }
-  const data = await twitterClient.tweets.search(params);
-  return data;
-}
+// async function getRequestV1(searchQuery) {
+//   // tweets.search(parameters)
+//   const params = {
+//     'q': searchQuery,
+//     'result_type': 'recent',
+//     'count': 50,
+//   }
+//   const data = await twitterClient.tweets.search(params);
+//   return data;
+// }
 
 
 async function getRequestV2(searchQuery) {
