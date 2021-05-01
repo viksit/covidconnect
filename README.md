@@ -11,7 +11,7 @@ https://covidconnect.vercel.app/api/1.1/data?city=delhi&resource_type=supply
 Today, it powers,
 
 * [https://life.coronasafe.network/](https://life.coronasafe.network/)
-* [https://indiacovidresources.in/] (https://indiacovidresources.in/)
+* [https://indiacovidresources.in/](https://indiacovidresources.in/)
 * .. Please add others here.
 
 
