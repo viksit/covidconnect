@@ -1,4 +1,4 @@
-import { getTwitterSearchRequestV2 } from "../../lib/twitter";
+import { getTwitterSearchRequestV2 } from "../../../lib/twitter";
 
 export default async (req, res) => {
   try {

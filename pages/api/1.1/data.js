@@ -1,4 +1,4 @@
-import { getTwitterSearchRequestV2 } from "../../lib/twitter";
+import { getTwitterSearchRequestV1 } from "../../../lib/twitter";
 
 export default async (req, res) => {
   try {
@@ -6,7 +6,7 @@ export default async (req, res) => {
     console.log('query: ', req.query);
     const { city, resource_type, max_results } = req.query; 
 
-    const apiResponse = await getTwitterSearchRequestV2({ 
+    const apiResponse = await getTwitterSearchRequestV1({ 
       city: city,
       resource_type: resource_type,
       max_results: max_results || 100
