@@ -33,3 +33,9 @@ If you'd like to contribute, please see https://github.com/viksit/covidconnect/i
 * @brainless [Sumit Datta]
 * @apoorvsingal [Apoorv Singal]
 * .. Please add others here
+
+
+## Sponsors
+* Twitter
+* Vercel
+
