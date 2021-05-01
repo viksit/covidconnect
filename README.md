@@ -1,3 +1,5 @@
+![banner](https://raw.githubusercontent.com/coronasafe/life/main/public/static/banner.png)
+
 # Introduction
 
 CovidConnect is a volunteer run project that brings a real time data stream for use for the current COVID-19 crisis in India. These APIs are free of charge and usable by any non profit/volunteer organization that wants to incorporate real time Twitter data into their projects.
@@ -8,7 +10,9 @@ https://covidconnect.vercel.app/api/1.1/data?city=delhi&resource_type=demand
 https://covidconnect.vercel.app/api/1.1/data?city=delhi&resource_type=supply
 ```
 
-Today, it powers,
+
+
+## Today, it powers,
 
 * [https://life.coronasafe.network/](https://life.coronasafe.network/)
 * [https://indiacovidresources.in/](https://indiacovidresources.in/)
