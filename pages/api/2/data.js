@@ -1,4 +1,5 @@
 import { getTwitterSearchRequestV2 } from "../../../lib/twitter";
+import parse from "../../../lib/parser";
 
 export default async (req, res) => {
   try {
@@ -12,6 +13,18 @@ export default async (req, res) => {
       max_results: max_results || 100
     });
 
+    if(apiResponse.res.data){
+      const data = [];
+    
+      for(let status of apiResponse.res.data){
+        statuses.push({ 
+            ...status,
+            cc_resource_type_detail: parse(status.text)
+        });
+      }
+      apiResponse.res.data = data;
+    }
+
     const response = {
       query_params: req.query,
       twitter_search_params: apiResponse.twitter_params,
@@ -22,6 +35,7 @@ export default async (req, res) => {
     // TODO(viksit): add error handling
     res.status(200).json({ response: response, status: 200 });
   } catch(err){
+    console.error(err);
     res.status(500).json({ response: { error: err.message }, status: 500 });
   }
 };
