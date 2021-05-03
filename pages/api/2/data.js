@@ -17,7 +17,7 @@ export default async (req, res) => {
       const data = [];
     
       for(let status of apiResponse.res.data){
-        statuses.push({ 
+        data.push({ 
             ...status,
             cc_resource_type_detail: parse(status.text)
         });
