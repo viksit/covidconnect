@@ -21,13 +21,13 @@ export default function Home() {
             <h3> Also see </h3>
             <h3>Documentation</h3>
             <p className={styles.code}>
-              <a href="https://covidconnect.vercel.app/api/data?city=delhi&resource_type=demand">
-                https://covidconnect.vercel.app/api/data?city=delhi&resource_type=demand
+              <a href="https://covidconnect.vercel.app/api/data?city=delhi&resource_type=demand&material_type=all">
+                https://covidconnect.vercel.app/api/data?city=delhi&resource_type=demand&material_type=all
               </a>
             </p>
             <p className={styles.code}>
-              <a href="https://covidconnect.vercel.app/api/data?city=delhi&resource_type=supply">
-                https://covidconnect.vercel.app/api/data?city=delhi&resource_type=supply<br/>
+              <a href="https://covidconnect.vercel.app/api/data?city=delhi&resource_type=supply&material_type=medicine">
+                https://covidconnect.vercel.app/api/data?city=delhi&resource_type=supply&material_type=medicine<br/>
               </a>
             </p>
             
