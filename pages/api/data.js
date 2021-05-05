@@ -5,12 +5,13 @@ export default async (req, res) => {
   try {
     // Make reuqest
     console.log('query: ', req.query);
-    const { city, resource_type, max_results } = req.query; 
+    const { city, resource_type, max_results, material_type } = req.query;
 
     const apiResponse = await getTwitterSearchRequestV2({ 
       city: city,
       resource_type: resource_type,
-      max_results: max_results || 100
+      max_results: max_results || 100,
+      material_type: material_type
     });
 
     if(apiResponse.res.data){

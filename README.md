@@ -6,8 +6,8 @@ CovidConnect is a volunteer run project that brings a real time data stream for 
 
 Example API
 ```
-https://covidconnect.vercel.app/api/1.1/data?city=delhi&resource_type=demand
-https://covidconnect.vercel.app/api/1.1/data?city=delhi&resource_type=supply
+https://covidconnect.vercel.app/api/1.1/data?city=delhi&resource_type=demand&material_type=[all|Oxygen|Medicine|Vaccine|Plasma|Hospital|Helpline|Ambulance]
+https://covidconnect.vercel.app/api/1.1/data?city=delhi&resource_type=supply&material_type=[all|Oxygen|Medicine|Vaccine|Plasma|Hospital|Helpline|Ambulance]
 ```
 
 
